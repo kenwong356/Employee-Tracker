@@ -164,6 +164,41 @@ var employee_track = function () {
                     employee_track();
                 });
             });
+        } else if (answers.prompt === 'Update An Employee Role')  {
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'employee_id',
+                    message: "Enter the ID of the employee whose role you want to update:",
+                    validate: employeeIdInput => {
+                        if (employeeIdInput) {
+                            return true;
+                        } else {
+                            console.log("Please Enter The Employee's ID!");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: 'input',
+                    name: 'new_role_id',
+                    message: "Enter the new role ID for the employee:",
+                    validate: newRoleIdInput => {
+                        if (newRoleIdInput) {
+                            return true;
+                        } else {
+                            console.log("Please Enter The New Role ID!");
+                            return false;
+                        }
+                    }
+                }
+            ]).then((answers) => {
+                db.query(`UPDATE employee SET role_id = ? WHERE id = ?`, [answers.new_role_id, answers.employee_id], (err, result) => {
+                    if (err) throw err;
+                    console.log(`Updated role for employee with ID ${answers.employee_id} to ${answers.new_role_id}.`);
+                    employee_track();
+                });
+            });
         } else if (answers.prompt === 'Log Out') {
             db.end();
             console.log("Bye!");
